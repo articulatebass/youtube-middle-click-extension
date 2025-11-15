@@ -64,7 +64,7 @@ function getSuggestionsRoot() {
   const candidates = [
     "tp-yt-paper-listbox[role='listbox']",
     "ytd-searchbox-suggestions",
-    "yt-searchbox-suggestions"
+    "yt-searchbox-suggestions",
   ];
 
   for (const sel of candidates) {
@@ -116,19 +116,32 @@ function findSuggestionByCoords(x, y) {
   return null;
 }
 
+function normalizeSuggestionNode(node) {
+  // Always walk up to the full suggestion row/container
+  if (!node || !node.closest) return node;
+  const container = node.closest(
+    "ytd-searchbox-suggestion,[role='option'],yt-searchbox-suggestion,[class*='suggestion']"
+  );
+  return container || node;
+}
+
 function findSuggestionForEvent(e) {
   const path = e.composedPath ? e.composedPath() : e.path || [];
   let suggestion = findSuggestionInList(path);
-  if (suggestion) return suggestion;
+  if (suggestion) return normalizeSuggestionNode(suggestion);
 
   suggestion = findSuggestionByCoords(e.clientX, e.clientY);
-  return suggestion;
+  return normalizeSuggestionNode(suggestion);
 }
 
-// aggressive text extraction for suggestions
+// Robust text extraction for suggestions
 function getSuggestionText(node) {
   if (!node) return "";
 
+  // 🔧 NEW: always use the container row for text, not just the piece you clicked
+  node = normalizeSuggestionNode(node);
+
+  // 1) Try attributes on the container (these often contain full text)
   const attrCandidates = ["aria-label", "title", "data-query", "data-value", "data-text"];
   for (const attr of attrCandidates) {
     if (node.getAttribute) {
@@ -147,6 +160,16 @@ function getSuggestionText(node) {
     }
   }
 
+  // 🔧 NEW: Prefer the entire row's visible text (first line)
+  let rowText = (node.innerText || node.textContent || "").trim();
+  if (rowText) {
+    if (rowText.includes("\n")) {
+      rowText = rowText.split("\n")[0].trim();
+    }
+    if (rowText) return rowText;
+  }
+
+  // Fallbacks (rarely needed now)
   const textEl =
     node.querySelector("yt-formatted-string") ||
     node.querySelector("span") ||
@@ -167,7 +190,7 @@ function getSuggestionText(node) {
       acceptNode: (n) =>
         n.nodeValue && n.nodeValue.trim()
           ? NodeFilter.FILTER_ACCEPT
-          : NodeFilter.FILTER_REJECT
+          : NodeFilter.FILTER_REJECT,
     }
   );
 
@@ -257,7 +280,7 @@ function handleSearchButtonMiddleClick(e) {
 // =========================
 
 function handleMouseDown(e) {
-  if (!extensionEnabled) return;       // <-- respect toggle
+  if (!extensionEnabled) return;
   if (e.button !== 1) return;
 
   // 1) Search button: stop autoscroll
@@ -279,7 +302,7 @@ function handleMouseDown(e) {
 }
 
 function handleAuxClick(e) {
-  if (!extensionEnabled) return;       // <-- respect toggle
+  if (!extensionEnabled) return;
   if (e.button !== 1) return;
 
   // 1) Search button
