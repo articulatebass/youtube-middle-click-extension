@@ -33,23 +33,22 @@ This project is licensed under the MIT License – see the [LICENSE](LICENSE) fi
 
 ## Collaborators
 
-If you’d like to contribute, feel free to jump in!
+If you’d like to contribute, you’re welcome to!
 
 How to help:
-- Open an issue if you find a bug or have an idea.
-- Submit a pull request with a clear description of what you changed.
-- Keep PRs small and focused when possible.
-- If your change affects the UI or behavior, include a short note or screenshot/gif.
+- Open an issue if you spot something or have an idea.
+- Submit a pull request with a quick note about what you changed.
+- Small or big changes are both fine — anything that improves the extension is appreciated.
 
 Where to make changes:
-- content.js — main logic for middle-click behavior.
-- popup.html / popup.js — extension popup UI.
-- manifest.json — permissions and Chrome extension config.
+- content.js — main logic for the middle-click behavior
+- popup.html / popup.js — popup interface
+- manifest.json — extension settings
 
 Testing changes:
 1. Go to chrome://extensions
 2. Enable Developer mode
-3. Click “Load unpacked” and select this project folder
-4. After edits, hit “Reload” on the extension and refresh YouTube
+3. Click "Load unpacked" and select this project folder
+4. After edits, hit "Reload" on the extension and refresh YouTube
 
-No strict rules — keep things simple, clear, and helpful!
+Thanks for taking the time to help out!
