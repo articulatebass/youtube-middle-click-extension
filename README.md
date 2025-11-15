@@ -1,5 +1,7 @@
 # YouTube Middle-Click
 
+![Demo](demo.gif)
+
 A lightweight Chrome extension that makes YouTube's search suggestions behave like real links.
 
 ## Features
