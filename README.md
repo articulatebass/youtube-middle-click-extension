@@ -30,3 +30,26 @@ A lightweight Chrome extension that makes YouTube's search suggestions behave li
 ## License
 
 This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
+
+## Collaborators
+
+If you’d like to contribute, feel free to jump in!
+
+How to help:
+- Open an issue if you find a bug or have an idea.
+- Submit a pull request with a clear description of what you changed.
+- Keep PRs small and focused when possible.
+- If your change affects the UI or behavior, include a short note or screenshot/gif.
+
+Where to make changes:
+- content.js — main logic for middle-click behavior.
+- popup.html / popup.js — extension popup UI.
+- manifest.json — permissions and Chrome extension config.
+
+Testing changes:
+1. Go to chrome://extensions
+2. Enable Developer mode
+3. Click “Load unpacked” and select this project folder
+4. After edits, hit “Reload” on the extension and refresh YouTube
+
+No strict rules — keep things simple, clear, and helpful!
