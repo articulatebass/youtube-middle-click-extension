@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>YT Middle-Click</title>
+    <style>
+      :root {
+        color-scheme: dark light;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 10px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: #020617;
+        color: #e5e7eb;
+        min-width: 220px;
+      }
+
+      .card {
+        background: #020617;
+        border-radius: 12px;
+        padding: 10px 12px;
+        box-shadow: 0 16px 35px rgba(0, 0, 0, 0.55);
+        border: 1px solid rgba(148, 163, 184, 0.35);
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+
+      .logo-pill {
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at 30% 0, #f97316, #ef4444);
+        font-size: 15px;
+        box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.9);
+      }
+
+      .title {
+        font-size: 13px;
+        margin: 0;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+      }
+
+      .divider {
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(148, 163, 184, 0.6),
+          transparent
+        );
+        margin: 6px 0 8px;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+
+      .row-label-main {
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      /* Toggle switch */
+      .switch {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .switch input {
+        display: none;
+      }
+
+      .slider {
+        position: relative;
+        width: 36px;
+        height: 18px;
+        border-radius: 999px;
+        background: #4b5563;
+        transition: background 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.8);
+      }
+
+      .slider::before {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 14px;
+        height: 14px;
+        border-radius: 999px;
+        background: #e5e7eb;
+        transform: translateX(0);
+        transition: transform 0.2s ease, background 0.2s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      }
+
+      .switch input:checked + .slider {
+        background: linear-gradient(to right, #22c55e, #16a34a);
+        box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
+      }
+
+      .switch input:checked + .slider::before {
+        transform: translateX(18px);
+        background: #f9fafb;
+      }
+
+      .status-pill {
+        font-size: 10.5px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.7);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .status-pill.on {
+        border-color: rgba(34, 197, 94, 0.7);
+        background: rgba(22, 163, 74, 0.12);
+        color: #bbf7d0;
+      }
+
+      .status-pill.off {
+        border-color: rgba(148, 163, 184, 0.6);
+        background: rgba(15, 23, 42, 0.9);
+        color: #e5e7eb;
+      }
+
+      .footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 6px;
+        gap: 8px;
+      }
+
+      .github-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        text-decoration: none;
+        color: #e5e7eb;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.95);
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        transition: background 0.15s ease, border-color 0.15s ease,
+          transform 0.1s ease;
+      }
+
+      .github-link:hover {
+        background: rgba(30, 64, 175, 0.35);
+        border-color: rgba(59, 130, 246, 0.7);
+        transform: translateY(-0.5px);
+      }
+
+      .github-icon {
+        width: 14px;
+        height: 14px;
+        display: block;
+      }
+
+      .footer-note {
+        font-size: 10px;
+        color: #6b7280;
+        text-align: right;
+        flex: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="header">
+        <div class="logo-pill">⏺</div>
+        <h1 class="title">YT Middle-Click</h1>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <span class="row-label-main">Enabled</span>
+        <label class="switch">
+          <input type="checkbox" id="enabled" />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="footer">
+        <a
+          class="github-link"
+          href="https://github.com/articulatebass"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <img src="github.svg" alt="GitHub" class="github-icon" />
+          <span>GitHub</span>
+        </a>
+        <div id="status-pill" class="status-pill off">Off</div>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+# OS / editor stuff
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node / build artifacts (future-proofing)
+node_modules/
+dist/
+build/
+*.log
+
+# Zips / packaged extension
+*.zip
