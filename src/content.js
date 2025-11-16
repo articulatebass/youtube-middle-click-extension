@@ -29,7 +29,7 @@ if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.sync) {
 // =========================
 
 function getSearchInput() {
-  // 1) Direct selectors
+  // 1) Try normal selectors
   let input = document.querySelector("input#search");
   if (input) {
     debugLog("Found input#search in main document:", input);
@@ -42,7 +42,7 @@ function getSearchInput() {
     return input;
   }
 
-  // 2) Fallback: look inside masthead
+  // 2) Look inside ytd-masthead (this is what worked in your logs)
   const masthead = document.querySelector("ytd-masthead");
   if (masthead) {
     const mastInputs = masthead.querySelectorAll("input");
@@ -72,14 +72,25 @@ function getSuggestionsRoot() {
     if (el) return el;
   }
 
+  // fallback: old behavior (we’ll filter out video-player stuff below)
   return document.body;
 }
 
+// 🔧 UPDATED: ignore nodes inside the video player
 function findSuggestionInList(nodes) {
   if (!nodes) return null;
 
   for (const node of nodes) {
     if (!node || node === window || node === document) continue;
+
+    // Ignore anything inside the video player (end-screen thumbnails, overlays, etc.)
+    try {
+      if (node.closest && node.closest("#movie_player, .html5-video-player")) {
+        continue;
+      }
+    } catch (e) {
+      // ignore
+    }
 
     const tag = node.tagName || "";
     const getAttr = node.getAttribute ? node.getAttribute.bind(node) : () => null;
@@ -93,6 +104,7 @@ function findSuggestionInList(nodes) {
   return null;
 }
 
+// 🔧 UPDATED: ignore candidates inside the video player
 function findSuggestionByCoords(x, y) {
   const root = getSuggestionsRoot();
 
@@ -107,6 +119,15 @@ function findSuggestionByCoords(x, y) {
   }
 
   for (const el of candidates) {
+    // Ignore anything inside the video player (end-screen thumbnails, overlays, etc.)
+    try {
+      if (el.closest && el.closest("#movie_player, .html5-video-player")) {
+        continue;
+      }
+    } catch (e) {
+      // ignore
+    }
+
     const r = el.getBoundingClientRect();
     if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
       return el;
@@ -138,7 +159,7 @@ function findSuggestionForEvent(e) {
 function getSuggestionText(node) {
   if (!node) return "";
 
-  // 🔧 NEW: always use the container row for text, not just the piece you clicked
+  // always use the container row for text, not just the piece you clicked
   node = normalizeSuggestionNode(node);
 
   // 1) Try attributes on the container (these often contain full text)
@@ -160,7 +181,7 @@ function getSuggestionText(node) {
     }
   }
 
-  // 🔧 NEW: Prefer the entire row's visible text (first line)
+  // Prefer the entire row's visible text (first line)
   let rowText = (node.innerText || node.textContent || "").trim();
   if (rowText) {
     if (rowText.includes("\n")) {
@@ -314,7 +335,7 @@ function handleAuxClick(e) {
 
   // 2) Suggestions
   const suggestion = findSuggestionForEvent(e);
-  if (!suggestion) return; // not in suggestion row; let YT handle everything else normally
+  if (!suggestion) return; // not a suggestion → let YouTube handle normally
 
   const text = getSuggestionText(suggestion);
   debugLog("Middle click on suggestion:", text);
